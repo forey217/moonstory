@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="用 MoonStory 编写、检查和试玩互动剧情。MoonBit 核心驱动，完全在本地运行。">
+  <title>MoonStory · 让故事有另一种可能</title>
+  <link rel="stylesheet" href="/web/style.css">
+  <script type="module" src="/web/app.mjs"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="MoonStory 首页"><span class="brandmark" aria-hidden="true">◒</span> MoonStory<span class="version">0.1</span></a>
+    <div class="toplinks"><span class="local"><i></i> 故事在本地运行</span><a href="https://github.com/forey217/moonstory" target="_blank" rel="noreferrer">GitHub ↗</a></div>
+  </header>
+  <main>
+    <section class="intro">
+      <div><p class="eyebrow">A SMALL ENGINE FOR MANY POSSIBILITIES</p><h1>让故事，<span>有另一种可能。</span></h1><p class="subtitle">写下对话，连起分支。把一个想法，变成可以亲自走进去的故事。</p></div>
+      <div class="intro-note"><span class="note-number">01 / 03</span><p>从灯塔开始，<br>你的选择决定归航。</p><svg viewBox="0 0 120 35" aria-hidden="true"><path d="M2 20h40q12 0 16-12t18-3l14 14h24M58 17q5 14 17 14h26"/><circle cx="3" cy="20" r="3"/><circle cx="115" cy="19" r="3"/><circle cx="102" cy="31" r="3"/></svg></div>
+    </section>
+    <nav class="example-tabs" aria-label="选择示例剧情">
+      <button class="example active" data-example="harbor" aria-pressed="true"><span>01</span><b>归航 · 灯塔委托</b><small>NPC 与任务</small></button>
+      <button class="example" data-example="observatory" aria-pressed="false"><span>02</span><b>零点观测站</b><small>互动小说</small></button>
+      <button class="example" data-example="training" aria-pressed="false"><span>03</span><b>失物招领</b><small>情景教学</small></button>
+    </nav>
+    <div class="workspace">
+      <section class="editor-panel panel" aria-labelledby="editor-title">
+        <div class="panel-head"><div><span class="section-number">01</span><h2 id="editor-title">故事脚本</h2></div><span id="filename">harbor.mstory</span></div>
+        <div class="editor-tools"><span>MOONSTORY 1</span><button id="check">检查剧情 <kbd>Ctrl ↵</kbd></button></div>
+        <div class="code-wrap"><pre id="line-numbers" aria-hidden="true">1</pre><textarea id="source" aria-label="剧情脚本编辑器" spellcheck="false" autocomplete="off" autocapitalize="off"></textarea></div>
+        <div class="editor-foot"><span id="source-stats">载入中…</span><button id="download-source">导出脚本 ↓</button></div>
+        <details class="syntax-help"><summary>几行文字，就能开始一个故事</summary><pre>story "hello" "第一次相遇"
+:: start
+line guide "欢迎。你想去哪里？"
+choice forest "去森林" -> forest
+choice home "回家" -> home
+:: forest
+end "adventure"
+:: home
+end "home"</pre><p>变量用 var 声明，set 赋值；选项后可加 if 条件。每个节点以 choice、jump 或 end 结束。完整语法见仓库文档。</p></details>
+      </section>
+      <section class="preview-panel panel" aria-labelledby="preview-title">
+        <div class="panel-head"><div><span class="section-number">02</span><h2 id="preview-title">走进故事</h2></div><button id="restart" class="restart">↻ 重新开始</button></div>
+        <div class="preview-stage">
+          <div class="scene-heading"><span class="scene-rule"></span><span id="scene-label">HARBOR / 归航</span></div>
+          <div class="story-emblem" aria-hidden="true"><svg viewBox="0 0 180 130"><circle cx="115" cy="32" r="20" class="moon"/><path d="M59 108l9-65h29l9 65M65 44h35l-17-16zM66 55h33M63 77h39M76 108V91h14v17M74 62h17v9H74z" class="tower"/><path d="M68 108l-13 8H16m91-8 18 8h39M31 126h28m13 0h48m12 0h20" class="sea"/><path d="M102 51l53-16m-53 19 56 5" class="beam"/></svg></div>
+          <div id="transcript" class="transcript" aria-live="polite" aria-atomic="false"></div>
+          <div id="stage-actions" class="stage-actions"></div>
+          <p id="progress" class="progress">准备进入故事</p>
+        </div>
+        <div class="savebar"><button id="save-local">保存进度</button><button id="restore-local">读取进度</button><button id="download-save">导出存档 ↓</button><label class="file-label">导入存档<input id="import-save" type="file" accept=".json,application/json"></label></div>
+      </section>
+      <aside class="inspector-panel panel" aria-label="剧情检查与状态">
+        <div class="panel-head"><div><span class="section-number">03</span><h2>故事脉络</h2></div><span class="tiny-dot"></span></div>
+        <div id="status" class="status" role="status">正在连接运行引擎…</div>
+        <div id="diagnostics" class="diagnostics"></div>
+        <section class="inspector-section"><h3>运行变量 <span id="variable-count">0</span></h3><div id="variables" class="variables"><p class="muted">推进故事后，在这里观察变化。</p></div></section>
+        <section class="inspector-section"><h3>节点导航 <span id="node-count">0</span></h3><p class="hint">点击定位脚本；连线表示结构关系。</p><div id="node-map" class="node-map"></div></section>
+        <section class="inspector-section"><h3>宿主事件 <span id="event-count">0</span></h3><div id="events" class="events"><p class="muted">任务、物品与评分事件会出现在这里。</p></div></section>
+      </aside>
+    </div>
+    <footer><span>MoonBit 驱动的互动剧情引擎</span><span>脚本检查 · 条件分支 · 可重放存档</span><a href="https://github.com/forey217/moonstory/blob/main/docs/language.md" target="_blank" rel="noreferrer">阅读语言说明 ↗</a></footer>
+  </main>
+</body>
+</html>
