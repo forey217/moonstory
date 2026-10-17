@@ -1,0 +1,43 @@
+story "observatory" "零点观测站"
+# 场景二：互动小说。线索组合与有代价的分支决定结局。
+var minutes = 3
+var note = false
+var frequency = false
+:: arrival
+line narrator "23:57，你收到失联观测站的信号。门后只有一台电台、一张桌子和一架望远镜。"
+choice desk "查看桌上的便笺（1 分钟）" -> desk if minutes > 0 && !note
+choice radio "调试电台（1 分钟）" -> radio if minutes > 0 && !frequency
+choice lens "看向望远镜（1 分钟）" -> lens if minutes > 0
+choice transmit "发送最终信号" -> transmit
+:: desk
+set minutes = minutes - 1
+set note = true
+line narrator "便笺写着：不要回答自己的呼号。你把这句话记了下来。还剩 ${minutes} 分钟。"
+jump arrival
+:: radio
+set minutes = minutes - 1
+set frequency = true
+line operator "备用频率 143。若听到零点的回声，就切断主台。"
+jump arrival
+:: lens
+set minutes = minutes - 1
+line narrator "镜头里没有星星，只有三分钟前走进观测站的你。还剩 ${minutes} 分钟。"
+jump arrival
+:: transmit
+if note && frequency -> rescue
+if note -> silence
+line radio "这里是观测站。请重复你的呼号。"
+choice answer "回答呼号" -> echo
+choice disconnect "断开电台" -> silence
+:: rescue
+emit "ending.unlocked" "rescue"
+line narrator "你切换到 143，听见救援队的声音。零点到来时，门外亮起真正的灯。"
+end "rescue"
+:: silence
+emit "ending.unlocked" "silence"
+line narrator "你拔掉电源。回声消失了。天亮以后，你一个人走下山。"
+end "silence"
+:: echo
+emit "ending.unlocked" "echo"
+line narrator "你说出了呼号。23:57，门外有人推门进来。那个人是你。"
+end "echo"

@@ -1,0 +1,53 @@
+story "harbor-quest" "归航 · 灯塔委托"
+# 场景一：接入 NPC、物品栏与任务系统。emit 由宿主接收。
+var coins = 3
+var parcel = false
+var delivered = false
+var trusted = false
+:: harbor
+line narrator "潮水漫过旧码头。灯塔还没有亮，你握着 ${coins} 枚金币。"
+line keeper "我是守灯人阿岚。暴风雨快来了，愿意帮我送一份灯芯吗？"
+choice accept "接下灯芯" -> accept if !parcel && !delivered
+choice buy "花两枚金币买一张航海图" -> buy if coins >= 2 && !trusted
+choice lighthouse "前往灯塔" -> lighthouse if parcel
+choice report "告诉阿岚灯已点亮" -> report if delivered
+choice leave "搭末班船离开" -> leave
+:: accept
+set parcel = true
+emit "quest.accepted" "lighthouse"
+emit "inventory.add" "wick"
+line keeper "请在涨潮前送到灯塔。不要把灯芯弄湿。"
+jump harbor
+:: buy
+set coins = coins - 2
+set trusted = true
+emit "inventory.add" "chart"
+line keeper "这张图标出了能避开风浪的礁石路。"
+jump harbor
+:: lighthouse
+line narrator "你沿礁石路爬上灯塔，把灯芯交给值夜人。"
+set parcel = false
+set delivered = true
+emit "inventory.remove" "wick"
+emit "quest.completed" "lighthouse"
+if trusted -> shortcut
+line watchman "你走了最远的一条路，但来得正是时候。"
+jump reward
+:: shortcut
+line watchman "看来你有阿岚的航海图。这条近路救了我们不少时间。"
+jump reward
+:: reward
+set coins = coins + 5
+emit "wallet.credit" 5
+line narrator "灯塔亮了。值夜人给你五枚金币，如今你有 ${coins} 枚。"
+jump harbor
+:: report
+line keeper "远处的船看见灯了。今晚，他们都能回家。"
+end "harbor_safe"
+:: leave
+if delivered -> safe_departure
+line narrator "船离开码头。身后的灯塔仍旧沉默，你决定明天再来。"
+end "unfinished_voyage"
+:: safe_departure
+line narrator "你乘船离开，灯光一直照到海平线。"
+end "safe_departure"

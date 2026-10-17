@@ -1,0 +1,41 @@
+story "service-training" "失物招领 · 沟通练习"
+# 场景三：服务沟通训练。评分事件由教学平台存储。
+var score = 0
+var verified = false
+:: greeting
+line customer "我把蓝色的包落在候车室了，能直接拿给我吗？我快赶不上车了。"
+choice verify "先询问包内物品以核实身份" -> verify
+choice handover "直接把蓝色包交给对方" -> unsafe
+choice dismiss "让对方自己去找" -> dismiss
+:: verify
+set score = score + 2
+set verified = true
+emit "assessment.step" "identity_check"
+line customer "里面有一本写着林晓名字的笔记本，还有一副红色耳机。"
+line staff "登记记录与描述一致。我们找到您的包了。"
+choice reassure "说明核实结果并陪同领取" -> reassure
+choice blame "批评对方粗心，再让他签字" -> blame
+:: reassure
+set score = score + 2
+line staff "已经核对好了。请跟我来，领取登记只需要一分钟，我也帮您确认下一班车。"
+line customer "谢谢，我刚才太着急了。"
+jump finish
+:: blame
+set score = score - 1
+line customer "我知道丢东西不好，但我现在只想找回包。"
+jump finish
+:: unsafe
+emit "assessment.risk" "unverified_handover"
+line narrator "未经身份核实交还物品，可能造成误领。请在重试时先核实身份。"
+end "retry_verification"
+:: dismiss
+line narrator "回应没有提供可执行的帮助。可以先表达理解，再说明核实流程。"
+end "retry_communication"
+:: finish
+emit "assessment.score" score
+if score >= 4 && verified -> passed
+line narrator "本次得分 ${score}/4。核实流程正确，沟通方式仍可以更温和。"
+end "practice_again"
+:: passed
+line narrator "本次得分 ${score}/4。你完成了核实、解释和后续帮助。"
+end "passed"
