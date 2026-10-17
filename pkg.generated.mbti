@@ -1,0 +1,102 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "forey217/moonstory"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn compile(String) -> Story raise StoryError
+
+pub fn restore(Story, String) -> Session raise StoryError
+
+pub fn run_json(String) -> String
+
+pub fn start(Story) -> Session raise StoryError
+
+// Errors
+pub(all) suberror StoryError {
+  Syntax(Int, Int, String)
+  Type(Int, String)
+  Runtime(String, String)
+  Limit(String)
+  Save(String)
+} derive(@debug.Debug)
+pub fn StoryError::to_repr(Self) -> @debug.Repr
+
+// Types and methods
+pub struct Choice {
+  id : String
+  text : String
+  target : String
+} derive(Eq, @debug.Debug)
+pub fn Choice::equal(Self, Self) -> Bool
+pub fn Choice::not_equal(Self, Self) -> Bool
+pub fn Choice::to_repr(Self) -> @debug.Repr
+
+pub struct Diagnostic {
+  code : String
+  node : String
+  line : Int
+  message : String
+} derive(Eq, @debug.Debug)
+pub fn Diagnostic::equal(Self, Self) -> Bool
+pub fn Diagnostic::not_equal(Self, Self) -> Bool
+pub fn Diagnostic::to_repr(Self) -> @debug.Repr
+
+pub struct Event {
+  sequence : Int
+  name : String
+  value : Value
+} derive(Eq, @debug.Debug)
+pub fn Event::equal(Self, Self) -> Bool
+pub fn Event::not_equal(Self, Self) -> Bool
+pub fn Event::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Frame {
+  Line(String, String)
+  Choices(Array[Choice])
+  Ended(String)
+} derive(Eq, @debug.Debug)
+pub fn Frame::equal(Self, Self) -> Bool
+pub fn Frame::not_equal(Self, Self) -> Bool
+pub fn Frame::to_repr(Self) -> @debug.Repr
+
+pub struct Session {
+  // private fields
+}
+pub fn Session::action_count(Self) -> Int
+pub fn Session::advance(Self) -> Self raise StoryError
+pub fn Session::choose(Self, String) -> Self raise StoryError
+pub fn Session::events(Self) -> Array[Event]
+pub fn Session::frame(Self) -> Frame
+pub fn Session::json(Self) -> Json
+pub fn Session::node(Self) -> String
+pub fn Session::save(Self) -> String raise StoryError
+pub fn Session::source_line(Self) -> Int
+pub fn Session::variables(Self) -> Map[String, Value]
+
+pub struct Story {
+  id : String
+  title : String
+  // private fields
+}
+pub fn Story::diagnostics(Self) -> Array[Diagnostic]
+pub fn Story::instruction_count(Self) -> Int
+pub fn Story::json(Self) -> Json
+pub fn Story::node_names(Self) -> Array[String]
+
+pub(all) enum Value {
+  Number(Int)
+  Flag(Bool)
+  Text(String)
+} derive(Eq, @debug.Debug)
+pub fn Value::equal(Self, Self) -> Bool
+pub fn Value::json(Self) -> Json
+pub fn Value::not_equal(Self, Self) -> Bool
+pub fn Value::text(Self) -> String
+pub fn Value::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits
