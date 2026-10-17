@@ -1,0 +1,17 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "forey217/moonstory-consumer-example"
+
+import {
+  "forey217/moonstory",
+}
+
+// Values
+pub fn accept_and_save(String) -> String raise @moonstory.StoryError
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
