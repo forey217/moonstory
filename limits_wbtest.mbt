@@ -104,3 +104,25 @@ test "rendering and string growth limits are enforced before oversized output" {
     },
   )
 }
+
+///|
+test "save checks long repeated choice ids before encoding the complete journal" {
+  let id = "x".repeat(120000)
+  let story = compile(
+    "story \"large\" \"large\"\n:: loop\nchoice " + id + " \"again\" -> loop",
+  )
+  let mut s = start(story)
+  for i = 0; i < 20; i = i + 1 {
+    s = s.choose(id)
+  }
+  assert_eq(s.action_count(), 20)
+  assert_true(
+    try {
+      s.save() |> ignore
+      false
+    } catch {
+      StoryError::Limit(_) => true
+      _ => false
+    },
+  )
+}

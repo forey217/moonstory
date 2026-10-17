@@ -36,7 +36,7 @@ npm run demo
 ## 安装运行库
 
 ```sh
-moon add forey217/moonstory@0.1.0
+moon add forey217/moonstory@0.1.1
 ```
 
 在 `moon.pkg` 中导入 `"forey217/moonstory" @story`。`compile` 检查完整脚本；`start` 创建会话；`frame()` 返回 Line、Choices 或 Ended；`advance()`/`choose(id)` 返回新会话。`events()` 交付这次推进新增的宿主事件。`save()`/`restore()` 保存和恢复进度。可执行的独立模块见 [examples/consumer](examples/consumer)。
@@ -62,7 +62,7 @@ node scripts/cli.mjs graph examples/harbor.mstory
 
 存档通过精确源文本与玩家动作重放重建状态，恢复时抑制历史事件。宿主自行执行并去重外部副作用；这不替代游戏事务或联网奖励鉴权。结构检查忽略条件真假，不承诺所有状态都有可用选择。首版没有随机数、并发剧情、函数、Ink/Yarn 导入或旧剧情自动迁移。
 
-26 项 MoonBit 测试包含 2 项独立模块集成测试；7 项 Node 测试枚举全部 10 个示例结局，并将 200 份生成剧情与单独实现的 JS 状态模型逐步核对。CI 运行 JS、Wasm、Wasm-GC、native。方法与局限见 [验证说明](docs/verification.md)。
+27 项 MoonBit 测试包含 2 项独立模块集成测试；7 项 Node 测试枚举全部 10 个示例结局，并将 200 份生成剧情与单独实现的 JS 状态模型逐步核对。CI 运行 JS、Wasm、Wasm-GC、native。方法与局限见 [验证说明](docs/verification.md)。
 
 - [语言、执行约定与资源限制](docs/language.md)
 - [SDK、宿主事件、JSON 边界与 CLI 接入](docs/integration.md)
